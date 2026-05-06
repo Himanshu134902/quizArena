@@ -1,7 +1,40 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
+
+  // 🔥 EVENT START TIME
+  const EVENT_TIME = new Date("2026-05-10T18:00:00");
+
+  const [timeLeft, setTimeLeft] = useState("");
+  const [isLive, setIsLive] = useState(false);
+
+  // 🔥 COUNTDOWN TIMER
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      const diff = EVENT_TIME - now;
+
+      if (diff <= 0) {
+        setIsLive(true);
+        setTimeLeft("LIVE NOW");
+        clearInterval(timer);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      setTimeLeft(
+        `${days}d ${hrs}h ${mins}m ${secs}s`
+      );
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <main className="home-premium">
@@ -71,32 +104,52 @@ function Home() {
 
         .home-title {
           margin: 0;
-          font-size: clamp(48px, 9vw, 108px);
+          font-size: clamp(70px, 14vw, 160px);
           line-height: 0.88;
           font-weight: 900;
-          letter-spacing: -0.055em;
-          text-wrap: balance;
+          letter-spacing: -0.08em;
         }
 
         .home-title span {
           display: inline-block;
           padding-bottom: 0.08em;
-          background: linear-gradient(135deg, #ffffff 0%, #c7d2fe 32%, #a78bfa 62%, #f0abfc 100%);
+          background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #c7d2fe 32%,
+            #a78bfa 62%,
+            #f0abfc 100%
+          );
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
           text-shadow: 0 24px 80px rgba(124, 58, 237, 0.2);
         }
 
+        .mib-fullform {
+          margin-top: -12px;
+          color: #cbd5e1;
+          font-size: clamp(16px, 2vw, 24px);
+          font-weight: 700;
+          letter-spacing: 0.35em;
+        }
+
         .home-sub {
-          max-width: 650px;
+          max-width: 720px;
           margin: 0 auto;
           color: #cbd5e1;
           font-size: clamp(17px, 2.1vw, 22px);
           font-weight: 500;
-          line-height: 1.65;
+          line-height: 1.75;
           letter-spacing: -0.015em;
-          text-wrap: balance;
+        }
+
+        .home-timer {
+          margin-top: 12px;
+          font-size: clamp(24px, 3vw, 36px);
+          font-weight: 800;
+          color: #a78bfa;
+          letter-spacing: 0.04em;
         }
 
         .home-actions {
@@ -107,125 +160,75 @@ function Home() {
         }
 
         .home-action {
-          min-width: 180px;
-          padding: 15px 22px;
-          border-radius: 16px;
+          min-width: 240px;
+          padding: 16px 26px;
+          border-radius: 18px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           font: inherit;
-          font-size: 14px;
+          font-size: 15px;
           font-weight: 850;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.03em;
           cursor: pointer;
-          transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+          transition: all 180ms ease;
         }
 
         .home-action.primary {
           color: #ffffff;
-          background: linear-gradient(135deg, #4f46e5, #7c3aed 55%, #a855f7);
+          background: linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed 55%,
+            #a855f7
+          );
           box-shadow: 0 20px 55px rgba(79, 70, 229, 0.36);
         }
 
-        .home-action.secondary {
-          color: #e2e8f0;
-          background: rgba(255, 255, 255, 0.065);
-          backdrop-filter: blur(18px);
-        }
-
-        .home-action:hover {
-          transform: translateY(-3px);
-          border-color: rgba(199, 210, 254, 0.38);
-        }
-
         .home-action.primary:hover {
-          box-shadow: 0 26px 70px rgba(124, 58, 237, 0.44);
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 0 28px 70px rgba(124, 58, 237, 0.42);
         }
 
-        .home-action:active {
-          transform: translateY(-1px) scale(0.99);
+        .disabled-btn {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
 
-        .home-stats {
-          width: min(100%, 780px);
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 12px;
-          animation: homeFadeUp 820ms ease 80ms both;
+        .disabled-btn:hover {
+          transform: none !important;
+          box-shadow: none !important;
         }
 
-        .home-stat,
-        .home-feature {
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(15, 23, 42, 0.58);
-          backdrop-filter: blur(20px);
-          box-shadow: 0 24px 70px rgba(2, 6, 23, 0.42);
-        }
-
-        .home-stat {
-          padding: 18px 14px;
-          border-radius: 22px;
-        }
-
-        .home-stat strong {
-          display: block;
-          color: #ffffff;
-          font-size: clamp(24px, 3vw, 34px);
-          line-height: 1;
-          font-weight: 900;
-          letter-spacing: -0.04em;
-        }
-
-        .home-stat span {
-          display: block;
-          margin-top: 8px;
-          color: #94a3b8;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .home-features {
-          width: min(100%, 900px);
+        .mib-strip {
+          width: min(100%, 950px);
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 16px;
-          animation: homeFadeUp 900ms ease 140ms both;
+          animation: homeFadeUp 900ms ease 120ms both;
         }
 
-        .home-feature {
+        .mib-card {
           padding: 24px;
-          border-radius: 24px;
-          text-align: left;
-          transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+          border-radius: 22px;
+          background: rgba(15, 23, 42, 0.58);
+          border: 1px solid rgba(255,255,255,0.08);
+          backdrop-filter: blur(20px);
+          box-shadow: 0 24px 70px rgba(2, 6, 23, 0.42);
+          color: #e2e8f0;
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1.7;
+          transition: all 0.2s ease;
         }
 
-        .home-feature:hover {
+        .mib-card:hover {
           transform: translateY(-5px);
           border-color: rgba(167, 139, 250, 0.34);
           background: rgba(30, 41, 59, 0.68);
         }
 
-        .home-feature h3 {
-          margin: 0;
-          color: #ffffff;
-          font-size: 18px;
-          line-height: 1.25;
-          font-weight: 850;
-          letter-spacing: -0.03em;
-        }
-
-        .home-feature p {
-          margin: 10px 0 0;
-          color: #94a3b8;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 1.65;
-          letter-spacing: -0.01em;
-        }
-
         .home-footer {
-          margin-top: 2px;
-          color: #94a3b8;
+          margin-top: 6px;
+          color: #64748b;
           font-size: 12px;
           line-height: 1;
           font-weight: 800;
@@ -255,9 +258,7 @@ function Home() {
             gap: 24px;
           }
 
-          .home-actions,
-          .home-stats,
-          .home-features {
+          .mib-strip {
             grid-template-columns: 1fr;
           }
 
@@ -265,8 +266,9 @@ function Home() {
             width: 100%;
           }
 
-          .home-feature {
-            text-align: center;
+          .mib-fullform {
+            letter-spacing: 0.18em;
+            line-height: 1.5;
           }
 
           .home-footer {
@@ -276,61 +278,64 @@ function Home() {
         }
       `}</style>
 
-      <section className="home-shell" aria-labelledby="home-title">
-        <p className="home-kicker">Competitive Quiz Platform</p>
+      <section className="home-shell">
 
-        <h1 className="home-title" id="home-title">
-          <span>QuizArena</span>
-        </h1>
-
-        <p className="home-sub">
-          Train under pressure, answer with precision, and climb a leaderboard built for serious competitors.
+        <p className="home-kicker">
+          ISTE BITS PRESENTS
         </p>
 
+        <h1 className="home-title">
+          <span>MIB</span>
+        </h1>
+
+        <p className="mib-fullform">
+          MOST INTELLIGENT BRANCH
+        </p>
+
+        <p className="home-sub">
+          Compete for your branch. Prove your intelligence.
+          Only the sharpest minds rise to the top.
+        </p>
+
+        {/* 🔥 TIMER */}
+        <div className="home-timer">
+          {timeLeft}
+        </div>
+
         <div className="home-actions">
-          <button className="home-action primary" onClick={() => navigate("/login")}>
-            Start Quiz
+          <button
+            className={`home-action primary ${
+              !isLive ? "disabled-btn" : ""
+            }`}
+            disabled={!isLive}
+            onClick={() => navigate("/login")}
+          >
+            {isLive
+              ? "Enter Competition"
+              : "Competition Starts Soon"}
           </button>
-
-          <button className="home-action secondary" onClick={() => navigate("/leaderboard")}>
-            View Leaderboard
-          </button>
         </div>
       </section>
 
-      <section className="home-stats" aria-label="Platform stats">
-        <div className="home-stat">
-          <strong>1000+</strong>
-          <span>Players</span>
+      <section className="mib-strip">
+
+        <div className="mib-card">
+          🧠 Inter-Branch Intelligence Competition
         </div>
-        <div className="home-stat">
-          <strong>5000+</strong>
-          <span>Questions Solved</span>
+
+        <div className="mib-card">
+          ⚡ One Attempt. No Second Chances.
         </div>
-        <div className="home-stat">
-          <strong>Live</strong>
-          <span>Competition</span>
+
+        <div className="mib-card">
+          ⏱ Speed decides your leaderboard rank.
         </div>
+
       </section>
 
-      <section className="home-features" aria-label="QuizArena features">
-        <article className="home-feature">
-          <h3>Speed Matters</h3>
-          <p>Beat the clock with a clean flow that keeps every question focused.</p>
-        </article>
-
-        <article className="home-feature">
-          <h3>Real Competition</h3>
-          <p>Track your rank and push for a better finish every round.</p>
-        </article>
-
-        <article className="home-feature">
-          <h3>Sharp Questions</h3>
-          <p>Practice with dynamic prompts designed to reward accuracy and pace.</p>
-        </article>
-      </section>
-
-      <footer className="home-footer">All Rights Reserved @ISTE BITS</footer>
+      <footer className="home-footer">
+        Organized by ISTE BITS
+      </footer>
     </main>
   );
 }

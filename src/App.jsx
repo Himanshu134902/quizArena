@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Leaderboard from "./pages/Leaderboard";
 import Admin from "./pages/Admin";
 import AdminRoute from "./components/AdminRoute";
+import Rules from "./pages/Rules";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/result" element={<Result />} />
         <Route path="/login" element={<Login />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/rules" element={<Rules />} />
         <Route
   path="/admin"
   element={
