@@ -5,7 +5,6 @@ import { database, auth } from "../firebase";
 
 import {
   ref,
-  onValue,
   push,
   get,
   set,
@@ -40,25 +39,38 @@ function Quiz() {
 
   const active = questions[current];
 
-  // 🔥 FETCH QUESTIONS
+  // 🔥 FETCH QUESTIONS ONLY ONCE
   useEffect(() => {
 
-    const qRef = ref(database, "questions");
+    const fetchQuestions = async () => {
 
-    const unsubscribe = onValue(
-      qRef,
-      (snap) => {
+      try {
+
+        const qRef = ref(
+          database,
+          "questions"
+        );
+
+        const snap =
+          await get(qRef);
 
         const data = snap.val();
 
         setQuestions(
-          data ? Object.values(data) : []
+          data
+            ? Object.values(data)
+            : []
         );
 
-      }
-    );
+      } catch (err) {
 
-    return () => unsubscribe();
+        console.log(err);
+
+      }
+
+    };
+
+    fetchQuestions();
 
   }, []);
 
