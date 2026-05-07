@@ -1,39 +1,45 @@
-import { database } from "./src/firebase.js";
+import admin from "firebase-admin";
 
-import {
-  ref,
-  push,
-} from "firebase/database";
+import serviceAccount
+from "./serviceAccountKey.json"
+with { type: "json" };
 
-import fs from "fs";
+import { questions }
+from "./questions.js";
 
-const questions = JSON.parse(
-  fs.readFileSync(
-    "./questions.json",
-    "utf-8"
-  )
-);
+// 🔥 INIT FIREBASE
+admin.initializeApp({
 
-const upload = async () => {
+  credential:
+    admin.credential.cert(
+      serviceAccount
+    ),
+
+  databaseURL:
+    "https://quiz-app-124dc-default-rtdb.firebaseio.com",
+
+});
+
+const db = admin.database();
+
+// 🔥 UPLOAD QUESTIONS
+async function uploadQuestions() {
 
   try {
 
     for (const q of questions) {
 
-      await push(
-        ref(database, "questions"),
-        q
-      );
+      await db.ref("questions")
+        .push(q);
 
       console.log(
-        "Uploaded:",
-        q.question
+        `✅ Uploaded: ${q.question}`
       );
 
     }
 
     console.log(
-      "✅ ALL QUESTIONS UPLOADED"
+      "🎉 ALL QUESTIONS UPLOADED"
     );
 
   } catch (err) {
@@ -42,6 +48,6 @@ const upload = async () => {
 
   }
 
-};
+}
 
-upload();
+uploadQuestions();
