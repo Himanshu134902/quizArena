@@ -1,104 +1,59 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const EVENT_TIME = new Date("2026-05-10T18:00:00");
 
 function Home() {
   const navigate = useNavigate();
-
-  const [timeLeft, setTimeLeft] = useState("");
-  const [isLive, setIsLive] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const diff = EVENT_TIME - now;
-
-      if (diff <= 0) {
-        setIsLive(true);
-        setTimeLeft("LIVE NOW");
-        clearInterval(timer);
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const mins = Math.floor((diff / (1000 * 60)) % 60);
-      const secs = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft(`${days}d ${hrs}h ${mins}m ${secs}s`);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <main className="home-premium">
       <style>{`
         .home-premium {
-          min-height: calc(100vh - 64px);
-          padding: 76px 24px 30px;
+          --bg: #050505;
+          --surface: #111111;
+          --surface-soft: #181818;
+          --text: #f7f7f7;
+          --muted: #a3a3a3;
+          --line: rgba(255, 255, 255, 0.12);
+          --line-strong: rgba(255, 255, 255, 0.22);
+
+          min-height: 100vh;
+          padding: 76px 24px 34px;
           box-sizing: border-box;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 56px;
+          gap: 28px;
           overflow: hidden;
           position: relative;
           text-align: center;
-          font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-          color: #f8fafc;
+          background:
+            radial-gradient(760px at 50% -10%, rgba(255, 255, 255, 0.12), transparent 58%),
+            linear-gradient(180deg, #0b0b0b 0%, var(--bg) 56%, #000000 100%);
+          color: var(--text);
+          font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
           font-synthesis: none;
           text-rendering: geometricPrecision;
         }
 
         .home-premium,
         .home-premium * {
-          font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-
-        .home-premium::before {
-          content: "";
-          position: fixed;
-          inset: 0;
-          z-index: -2;
-          background:
-            radial-gradient(780px at 18% 10%, rgba(99, 102, 241, 0.34), transparent 62%),
-            radial-gradient(640px at 84% 72%, rgba(168, 85, 247, 0.24), transparent 58%),
-            radial-gradient(520px at 50% 100%, rgba(14, 165, 233, 0.12), transparent 62%),
-            linear-gradient(135deg, #020617 0%, #0f172a 46%, #111827 100%);
-        }
-
-        .home-premium::after {
-          content: "";
-          position: fixed;
-          inset: 0;
-          z-index: -1;
-          pointer-events: none;
-          background:
-            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-          background-size: 56px 56px;
-          mask-image: linear-gradient(to bottom, rgba(0,0,0,0.72), transparent 76%);
+          box-sizing: border-box;
+          font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
         }
 
         .home-shell {
-          width: min(100%, 1040px);
+          width: min(100%, 1020px);
           display: grid;
-          gap: 30px;
-          padding: clamp(34px, 5vw, 54px);
+          gap: 22px;
+          padding: clamp(34px, 5vw, 68px);
           position: relative;
           overflow: hidden;
-          border-radius: 34px;
-          border: 1px solid rgba(255, 255, 255, 0.11);
+          border-radius: 30px;
+          border: 1px solid var(--line);
           background:
-            linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.03)),
-            rgba(15, 23, 42, 0.5);
-          backdrop-filter: blur(24px);
-          box-shadow:
-            0 34px 110px rgba(2, 6, 23, 0.62),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035)),
+            var(--surface);
+          box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
           animation: homeFadeUp 700ms ease both;
         }
 
@@ -108,8 +63,9 @@ function Home() {
           inset: 0;
           pointer-events: none;
           background:
-            radial-gradient(430px at 50% 0%, rgba(167, 139, 250, 0.2), transparent 62%),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.07), transparent 36%);
+            linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+          transform: translateX(-70%);
+          animation: homeSheen 1200ms ease 220ms both;
         }
 
         .home-shell > * {
@@ -120,71 +76,52 @@ function Home() {
         .home-kicker {
           margin: 0 auto;
           width: fit-content;
-          padding: 9px 15px;
-          border: 1px solid rgba(199, 210, 254, 0.22);
+          padding: 9px 16px;
+          border: 1px solid var(--line-strong);
           border-radius: 999px;
-          background: rgba(15, 23, 42, 0.58);
-          color: #c7d2fe;
+          background: rgba(255, 255, 255, 0.06);
+          color: var(--text);
           font-size: 12px;
-          font-weight: 850;
+          font-weight: 800;
           line-height: 1;
-          letter-spacing: 0.2em;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
-          box-shadow: 0 12px 40px rgba(30, 41, 59, 0.35);
+          backdrop-filter: blur(14px);
         }
 
         .home-title {
           margin: 0;
-          font-size: clamp(70px, 14vw, 160px);
-          line-height: 0.82;
-          font-weight: 950;
-          letter-spacing: -0.09em;
+          font-size: clamp(68px, 13vw, 152px);
+          line-height: 0.86;
+          font-weight: 900;
+          letter-spacing: -0.075em;
         }
 
         .home-title span {
           display: inline-block;
           padding-bottom: 0.08em;
-          background: linear-gradient(135deg, #ffffff 0%, #c7d2fe 32%, #a78bfa 62%, #f0abfc 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          text-shadow: 0 24px 80px rgba(124, 58, 237, 0.2);
+          color: var(--text);
         }
 
         .mib-fullform {
-          margin: -8px 0 0;
-          color: #cbd5e1;
-          font-size: clamp(14px, 1.8vw, 21px);
-          font-weight: 850;
+          margin: -2px 0 0;
+          color: var(--muted);
+          font-size: clamp(13px, 1.7vw, 19px);
+          font-weight: 800;
           line-height: 1.35;
-          letter-spacing: 0.32em;
+          letter-spacing: 0.24em;
           text-transform: uppercase;
         }
 
         .home-sub {
           max-width: 720px;
           margin: 0 auto;
-          color: #dbe3f0;
-          font-size: clamp(18px, 2.1vw, 23px);
-          font-weight: 500;
-          line-height: 1.7;
-          letter-spacing: -0.015em;
+          color: #d4d4d4;
+          font-size: clamp(17px, 2vw, 22px);
+          font-weight: 450;
+          line-height: 1.68;
+          letter-spacing: -0.01em;
           text-wrap: balance;
-        }
-
-        .home-timer {
-          width: fit-content;
-          margin: 4px auto 0;
-          padding: 16px 22px;
-          border-radius: 22px;
-          border: 1px solid rgba(199, 210, 254, 0.18);
-          background: rgba(2, 6, 23, 0.38);
-          color: #ffffff;
-          font-size: clamp(23px, 3vw, 36px);
-          line-height: 1;
-          font-weight: 900;
-          letter-spacing: -0.025em;
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 48px rgba(2, 6, 23, 0.34);
         }
 
         .home-actions {
@@ -196,56 +133,46 @@ function Home() {
 
         .home-action {
           min-width: 240px;
-          padding: 17px 28px;
-          border-radius: 18px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 16px 30px;
+          border-radius: 999px;
+          border: 1px solid transparent;
           font: inherit;
           font-size: 15px;
-          font-weight: 850;
-          letter-spacing: 0.06em;
+          font-weight: 800;
+          letter-spacing: 0.04em;
           text-transform: uppercase;
           cursor: pointer;
-          transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease, opacity 180ms ease;
+          transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
         }
 
         .home-action.primary {
-          color: #ffffff;
-          background: linear-gradient(135deg, #4f46e5, #7c3aed 55%, #a855f7);
-          box-shadow: 0 20px 55px rgba(79, 70, 229, 0.36);
+          color: #050505;
+          background: #ffffff;
+          box-shadow: 0 16px 42px rgba(255, 255, 255, 0.16);
         }
 
         .home-action.primary:hover {
-          transform: translateY(-4px) scale(1.02);
-          box-shadow: 0 28px 70px rgba(124, 58, 237, 0.42);
-        }
-
-        .disabled-btn {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .disabled-btn:hover {
-          transform: none !important;
-          box-shadow: none !important;
+          transform: translateY(-3px);
+          background: #e5e5e5;
+          box-shadow: 0 22px 56px rgba(255, 255, 255, 0.2);
         }
 
         .mib-strip {
-          width: min(100%, 950px);
+          width: min(100%, 960px);
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 18px;
+          gap: 16px;
           animation: homeFadeUp 900ms ease 120ms both;
         }
 
         .mib-card {
-          min-height: 118px;
-          padding: 24px 22px;
-          border-radius: 24px;
-          background: rgba(15, 23, 42, 0.58);
-          border: 1px solid rgba(255,255,255,0.08);
-          backdrop-filter: blur(20px);
-          box-shadow: 0 24px 70px rgba(2, 6, 23, 0.42);
-          color: #f8fafc;
+          min-height: 126px;
+          padding: 24px;
+          border-radius: 22px;
+          background: rgba(255, 255, 255, 0.055);
+          border: 1px solid var(--line);
+          box-shadow: 0 18px 54px rgba(0, 0, 0, 0.22);
+          color: var(--text);
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -255,32 +182,32 @@ function Home() {
         }
 
         .mib-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(167, 139, 250, 0.34);
-          background: rgba(30, 41, 59, 0.68);
-          box-shadow: 0 30px 80px rgba(2, 6, 23, 0.54);
+          transform: translateY(-4px);
+          border-color: var(--line-strong);
+          background: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
         }
 
         .mib-card-label {
-          color: #c7d2fe;
+          color: var(--muted);
           font-size: 11px;
           line-height: 1;
           font-weight: 900;
-          letter-spacing: 0.16em;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
         }
 
         .mib-card-title {
-          color: #ffffff;
+          color: var(--text);
           font-size: 17px;
           line-height: 1.35;
-          font-weight: 850;
-          letter-spacing: -0.025em;
+          font-weight: 750;
+          letter-spacing: -0.02em;
         }
 
         .home-footer {
           margin-top: 6px;
-          color: #64748b;
+          color: var(--muted);
           font-size: 12px;
           line-height: 1;
           font-weight: 800;
@@ -300,16 +227,25 @@ function Home() {
           }
         }
 
+        @keyframes homeSheen {
+          from {
+            transform: translateX(-70%);
+          }
+          to {
+            transform: translateX(70%);
+          }
+        }
+
         @media (max-width: 760px) {
           .home-premium {
             padding: 50px 18px 24px;
-            gap: 38px;
+            gap: 26px;
           }
 
           .home-shell {
-            gap: 24px;
+            gap: 22px;
             padding: 30px 20px;
-            border-radius: 28px;
+            border-radius: 24px;
           }
 
           .mib-strip {
@@ -350,15 +286,12 @@ function Home() {
           Compete for your branch, prove your intelligence, and rise through a live leaderboard built for speed and precision.
         </p>
 
-        <div className="home-timer">{timeLeft}</div>
-
         <div className="home-actions">
           <button
-            className={`home-action primary ${!isLive ? "disabled-btn" : ""}`}
-            disabled={!isLive}
+            className="home-action primary"
             onClick={() => navigate("/login")}
           >
-            {isLive ? "Enter Competition" : "Competition Starts Soon"}
+            Enter Competition
           </button>
         </div>
       </section>

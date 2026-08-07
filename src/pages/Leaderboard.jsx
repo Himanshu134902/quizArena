@@ -40,6 +40,12 @@ const formatTimeTaken = (seconds) => {
 
 };
 
+const getPoints = (user) =>
+  user.points ?? user.score ?? 0;
+
+const getScore = (user) =>
+  user.score ?? 0;
+
 function Leaderboard() {
 
   const [scores, setScores] =
@@ -354,6 +360,60 @@ function Leaderboard() {
             color: #c4b5fd;
           }
 
+          .leaderboard-stats {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            justify-content: flex-end;
+          }
+
+          .leaderboard-stat {
+
+            min-width: 86px;
+
+            padding: 10px 12px;
+
+            border-radius: 14px;
+
+            background:
+              rgba(124,58,237,0.16);
+
+            border:
+              1px solid rgba(196,181,253,0.18);
+
+            text-align: center;
+          }
+
+          .leaderboard-stat-label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            letter-spacing: 0.12em;
+
+            text-transform: uppercase;
+          }
+
+          .leaderboard-stat-value {
+
+            color: #ddd6fe;
+
+            font-size: 18px;
+
+            font-weight: 900;
+          }
+
           .time {
 
             color: #94a3b8;
@@ -425,9 +485,15 @@ function Leaderboard() {
             }
 
             .score,
+            .leaderboard-stats,
             .time {
 
               grid-column: 2;
+            }
+
+            .leaderboard-stats {
+
+              justify-content: flex-start;
             }
 
           }
@@ -507,6 +573,12 @@ function Leaderboard() {
                     const current =
                       isCurrentUser(user);
 
+                    const points =
+                      getPoints(user);
+
+                    const score =
+                      getScore(user);
+
                     return (
 
                       <div
@@ -543,9 +615,33 @@ function Leaderboard() {
 
                         </div>
 
-                        {/* SCORE */}
-                        <div className="score">
-                          {user.score} pts
+                        {/* POINTS + SCORE */}
+                        <div className="leaderboard-stats">
+
+                          <div className="leaderboard-stat">
+
+                            <span className="leaderboard-stat-label">
+                              Points
+                            </span>
+
+                            <span className="leaderboard-stat-value">
+                              {points}
+                            </span>
+
+                          </div>
+
+                          <div className="leaderboard-stat">
+
+                            <span className="leaderboard-stat-label">
+                              Score
+                            </span>
+
+                            <span className="leaderboard-stat-value">
+                              {score}
+                            </span>
+
+                          </div>
+
                         </div>
 
                         {/* TIME */}
